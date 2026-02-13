@@ -1,25 +1,25 @@
-
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Polymarket Dashboard</title>
-  <style>body{font-family:sans-serif;max-width:1200px;margin:0 auto;padding:20px}table{width:100%;border-collapse:collapse;border:1px solid #ddd}th,td{border:1px solid #ddd;padding:8px;text-align:left}th{background:#f2f2f2}#header{background:#1f2937;color:white;padding:20px;border-radius:10px;margin-bottom:20px}h2{color:#333}</style>
+<title>Polymarket Dashboard</title>
+<style>body{font-family:Arial,sans-serif;max-width:1200px;margin:0 auto;padding:20px;background:#f8f9fa}header{background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:white;padding:2rem;border-radius:15px;margin-bottom:2rem;box-shadow:0 10px 30px rgba(0,0,0,0.2)}h1{margin:0;font-size:2.5rem}stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin-bottom:2rem}stat{background:white;padding:1.5rem;border-radius:10px;text-align:center;box-shadow:0 5px 15px rgba(0,0,0,0.1)}stat h3{margin:0 0 0.5rem;color:#333}stat.value{font-size:1.5rem;font-weight:bold;color:#667eea}table{width:100%;border-collapse:collapse;margin-bottom:2rem;border-radius:10px;overflow:hidden;box-shadow:0 5px 15px rgba(0,0,0,0.1)}th{background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:white;padding:1rem;font-weight:600}td{padding:1rem;border-bottom:1px solid #eee}tr:hover{background:#f8f9fa}.last-trade{background:#e8f5e8;padding:1rem;border-radius:10px;margin-bottom:1rem;border-left:5px solid #4caf50}</style>
 </head>
 <body>
-  <h1>Polymarket Bot Dashboard 🚀</h1>
-  <div id="header">Loading...</div>
-  <h2>KPIs</h2>
-  <p id="kpis"></p>
-  <h2>Last Runs</h2>
-  <table><thead><tr><th>Run</th><th>Open</th><th>Tradable</th><th>New Trades</th><th>PnL</th></tr></thead><tbody id="runs"></tbody></table>
-  <h2>Events</h2>
-  <table><thead><tr><th>Type</th><th>Slug</th><th>Side</th><th>Size</th><th>TS</th></tr></thead><tbody id="events"></tbody></table>
-  <h2>Positions</h2>
-  <table><thead><tr><th>Slug</th><th>Size</th><th>Entry</th><th>Unreal</th><th>Age</th></tr></thead><tbody id="positions"></tbody></table>
-  <script>
-    const API_BASE = 'http://178.16.129.127:8080';
-    const TOKEN = 'bb407233c6cefa5c08566734145f843d3399c3d4fd69cbb80b284439a963f66c';
-    async function update() {
-      try {
-        const status = await (await fetch(`${API_BASE}/api/status`, {headers:{'x-api-key':TOKEN}})).json();
-        document.getElementById('header').innerHTML = `Phase: ${status.phase || 'N/A'} Mode: ${status.mode || 'PAPER'} Size: $${status.size || 0} Risk: ${status.risk || 'N/A'} Kill: ${status.kill
+<header>
+<h1>🦞 Polymarket Bot Dashboard</h1>
+<div id="status">Loading live data...</div>
+</header>
+<div class="stats" id="kpis"></div>
+<div class="last-trade" id="last-trade">Last Trade: Loading...</div>
+<h2>📊 Last Runs</h2>
+<table><thead><tr><th>Time</th><th>Open</th><th>Filtered</th><th>Trades</th><th>PnL</th></tr></thead><tbody id="runs"></tbody></table>
+<h2>🔍 Events</h2>
+<table><thead><tr><th>Type</th><th>Market</th><th>Side</th><th>Size</th><th>Status</th></tr></thead><tbody id="events"></tbody></table>
+<h2>💼 Positions</h2>
+<table><thead><tr><th>Market</th><th>Side</th><th>Entry</th><th>Current</th><th>PnL</th><th>Age</th></tr></thead><tbody id="positions"></tbody></table>
+<script>
+const API_BASE = 'http://178.16.129.127:8080';
+const TOKEN = 'bb407233c6cefa5c08566734145f843d3399c3d4fd69cbb80b284439a963f66c';
+async function loadData() {
+  const headers = {'x-api-key': TOKEN};
+  const [statusRes, runsRes, eventsRes, positionsRes]
